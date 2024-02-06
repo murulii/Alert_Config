@@ -1,0 +1,30 @@
+alertmanagerFiles: ## No Need
+  alertmanager.yml: ##No need
+
+  #Take Below code and paste on Alert Manager ConfigMap
+    global:
+      resolve_timeout: 1m
+      # slack_api_url: ''
+
+    receivers:
+    - name: 'gmail-notifications'
+      email_configs:
+      - to: muruli800@gmail.com 
+        from: muruli800@gmail.com # Update your from mail id here
+        smarthost: smtp.gmail.com:587
+        auth_username: muruli800@gmail.com # Update your from mail id here
+        auth_identity: muruli800@gmail.com # Update your from mail id here
+        auth_password: sykhbuqsueigolkh # Update your app-password here
+        send_resolved: true
+        headers:
+          subject: " Prometheus -  Alert  "
+        text: "{{ range .Alerts }} Hi, \n{{ .Annotations.summary }}  \n {{ .Annotations.description }} {{end}} "
+        # slack_configs:
+        #  - channel: '@you'
+        #    send_resolved: true
+
+    route:
+      group_wait: 10s
+      group_interval: 2m
+      receiver: 'gmail-notifications'
+      repeat_interval: 2m
